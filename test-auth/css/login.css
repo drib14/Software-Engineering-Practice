@@ -1,0 +1,473 @@
+/* ==========================================================================
+   LOGIN CARD STYLESHEET
+   Aesthetics: Modern Minimalist Neutral Palette, Solid Colors, Zero Gradients
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Design Tokens (Solid Neutral Palette - No Gradients)
+   -------------------------------------------------------------------------- */
+:root {
+    /* Base Neutral Tones (Zinc / Slate Spectrum) */
+    --bg-body: #f4f4f5;         /* Clean solid neutral light gray */
+    --bg-card: #ffffff;         /* Pure white surface */
+    --bg-input: #ffffff;        /* Crisp input background */
+    --bg-subtle: #f4f4f5;       /* Neutral 100 for chips and badges */
+    --bg-subtle-hover: #e4e4e7; /* Neutral 200 */
+
+    /* Text Colors */
+    --text-primary: #18181b;    /* Zinc 900 high contrast dark */
+    --text-secondary: #71717a;  /* Zinc 500 neutral text */
+    --text-muted: #a1a1aa;      /* Zinc 400 placeholder & icons */
+    --text-inverse: #ffffff;    /* White text on dark elements */
+
+    /* Borders */
+    --border-subtle: #e4e4e7;   /* Zinc 200 light border */
+    --border-hover: #d4d4d8;    /* Zinc 300 hover border */
+    --border-focus: #18181b;    /* Zinc 900 solid dark focus border */
+
+    /* Brand / Primary Element (Solid Dark Neutral) */
+    --primary-color: #18181b;   /* Solid Charcoal / Black */
+    --primary-hover: #27272a;   /* Solid Zinc 800 */
+    --primary-active: #09090b;  /* Solid Zinc 950 */
+
+    /* Status Solid Tones */
+    --error-bg: #fef2f2;
+    --error-border: #fecaca;
+    --error-text: #b91c1c;
+
+    --success-bg: #f0fdf4;
+    --success-border: #bbf7d0;
+    --success-text: #15803d;
+
+    /* Elevation & Shadows */
+    --shadow-card: 0 20px 45px -15px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
+    --shadow-button: 0 4px 12px rgba(24, 24, 27, 0.12);
+
+    /* Radii */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-full: 9999px;
+}
+
+/* --------------------------------------------------------------------------
+   2. Reset & Baseline
+   -------------------------------------------------------------------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--text-primary);
+    background-color: var(--bg-body); /* Strictly solid neutral, NO gradient */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* --------------------------------------------------------------------------
+   3. Main Container
+   -------------------------------------------------------------------------- */
+.login-container {
+    width: 100%;
+    max-width: 440px;
+}
+
+/* --------------------------------------------------------------------------
+   4. Login Card
+   -------------------------------------------------------------------------- */
+.login-card {
+    width: 100%;
+    padding: 40px 36px 30px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    animation: cardFadeIn 0.35s ease-out;
+}
+
+/* --------------------------------------------------------------------------
+   5. Logo Icon (Solid Neutral, No Gradient)
+   -------------------------------------------------------------------------- */
+.login-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-inverse);
+    font-size: 26px;
+    background-color: var(--primary-color); /* Solid neutral black, NO gradient */
+    border-radius: var(--radius-md);
+    box-shadow: 0 6px 16px rgba(24, 24, 27, 0.15);
+}
+
+/* --------------------------------------------------------------------------
+   6. Heading & Subtitle
+   -------------------------------------------------------------------------- */
+.login-card h1 {
+    font-size: 26px;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+}
+
+.subtitle {
+    margin: 6px 0 24px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   7. Alert Notification Box (Error / Success)
+   -------------------------------------------------------------------------- */
+.login-alert {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 12.5px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    animation: alertSlide 0.25s ease;
+}
+
+.login-alert.hidden {
+    display: none !important;
+}
+
+.login-alert.alert-error {
+    background-color: var(--error-bg);
+    border: 1px solid var(--error-border);
+    color: var(--error-text);
+}
+
+.login-alert.alert-success {
+    background-color: var(--success-bg);
+    border: 1px solid var(--success-border);
+    color: var(--success-text);
+}
+
+/* --------------------------------------------------------------------------
+   8. Form Inputs
+   -------------------------------------------------------------------------- */
+.input-group {
+    margin-bottom: 18px;
+}
+
+.input-group > label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.2px;
+}
+
+.input-box {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 14px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    background-color: var(--bg-input);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-box i {
+    flex-shrink: 0;
+    color: var(--text-muted);
+    font-size: 15px;
+    transition: color 0.2s ease;
+}
+
+.input-box input {
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 13.5px;
+    color: var(--text-primary);
+}
+
+.input-box input::placeholder {
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.input-box:hover {
+    border-color: var(--border-hover);
+}
+
+.input-box:focus-within {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.08);
+}
+
+.input-box:focus-within i {
+    color: var(--text-primary);
+}
+
+.input-box.input-error {
+    border-color: var(--error-text);
+    background-color: #fffaf0;
+}
+
+/* Password Toggle Button */
+.toggle-password-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition: color 0.2s ease;
+}
+
+.toggle-password-btn:hover {
+    color: var(--text-primary);
+}
+
+/* --------------------------------------------------------------------------
+   9. Options (Remember Me & Forgot Password)
+   -------------------------------------------------------------------------- */
+.options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 4px 0 22px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.remember-me input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary-color);
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.remember-me label {
+    color: var(--text-secondary);
+    font-size: 12px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.options a {
+    color: var(--text-primary);
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.options a:hover {
+    color: var(--text-secondary);
+    text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   10. Login Button (Solid Neutral, No Gradient)
+   -------------------------------------------------------------------------- */
+.login-card button[type="submit"] {
+    width: 100%;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: var(--primary-color); /* Solid neutral, NO gradient */
+    color: var(--text-inverse);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow-button);
+    transition: background-color 0.18s ease, transform 0.18s ease;
+}
+
+.login-card button[type="submit"] i {
+    font-size: 13px;
+    transition: transform 0.2s ease;
+}
+
+.login-card button[type="submit"]:hover:not(:disabled) {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+.login-card button[type="submit"]:hover:not(:disabled) i {
+    transform: translateX(3px);
+}
+
+.login-card button[type="submit"]:active:not(:disabled) {
+    background-color: var(--primary-active);
+    transform: translateY(0);
+}
+
+.login-card button[type="submit"]:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+/* --------------------------------------------------------------------------
+   11. Quick Demo Credentials Chips
+   -------------------------------------------------------------------------- */
+.demo-hint-box {
+    margin-top: 22px;
+    padding: 12px 14px;
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hint-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.demo-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.demo-chip {
+    flex: 1;
+    min-width: 140px;
+    background-color: #ffffff;
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-family: inherit;
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s ease;
+}
+
+.demo-chip strong {
+    color: var(--text-primary);
+}
+
+.demo-chip:hover {
+    border-color: var(--primary-color);
+    color: var(--text-primary);
+    background-color: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* --------------------------------------------------------------------------
+   12. Footer
+   -------------------------------------------------------------------------- */
+.login-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border-subtle);
+    color: var(--text-muted);
+    font-size: 11.5px;
+}
+
+.login-footer i {
+    color: var(--text-primary);
+    font-size: 12px;
+}
+
+/* --------------------------------------------------------------------------
+   13. Micro-Animations
+   -------------------------------------------------------------------------- */
+@keyframes cardFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes alertSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.shake {
+    animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+}
+
+/* --------------------------------------------------------------------------
+   14. Responsive Breakpoint
+   -------------------------------------------------------------------------- */
+@media (max-width: 480px) {
+    body {
+        padding: 16px;
+    }
+
+    .login-card {
+        padding: 30px 20px 24px;
+        border-radius: var(--radius-md);
+    }
+
+    .login-card h1 {
+        font-size: 23px;
+    }
+
+    .demo-chips {
+        flex-direction: column;
+    }
+}

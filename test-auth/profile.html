@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>User Profile | My Website</title>
+
+    <!-- CSS (Modern Neutral Theme, No Gradients) -->
+    <link rel="stylesheet" href="css/profile.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <main class="profile-container">
+
+        <!-- Top Navigation Bar -->
+        <nav class="profile-nav" aria-label="Breadcrumb">
+            <a href="index.html" class="nav-back-link">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Back to Login</span>
+            </a>
+            <span class="auth-pill">
+                <span class="status-dot"></span>
+                <span>Active Session</span>
+            </span>
+        </nav>
+
+        <!-- Main Profile Card -->
+        <article class="profile-card">
+
+            <!-- Card Header / Cover Bar (Solid Neutral, Zero Gradient) -->
+            <div class="card-cover">
+                <span class="security-tag">
+                    <i class="fa-solid fa-shield-check"></i> Verified Profile
+                </span>
+            </div>
+
+            <!-- Avatar Section -->
+            <div class="avatar-wrapper">
+                <div class="avatar" id="avatar-initials">
+                    JD
+                </div>
+                <div class="avatar-status-dot" title="Online"></div>
+            </div>
+
+            <!-- Profile Info Header -->
+            <div class="profile-header-info">
+                <div class="name-badge-row">
+                    <h1 id="profile-name">Alexander Wright</h1>
+                    <span id="profile-badge" class="badge-role">System Administrator</span>
+                </div>
+                <p id="profile-handle" class="profile-handle">@admin</p>
+                <p id="profile-department" class="profile-department">Core Infrastructure &amp; Security</p>
+            </div>
+
+            <!-- Bio -->
+            <p id="profile-bio" class="profile-bio">
+                Overseeing authentication gateways, cloud infrastructure, and enterprise data security.
+            </p>
+
+            <!-- Metadata Details Grid -->
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="detail-icon">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <div class="detail-text">
+                        <span class="detail-label">Email Address</span>
+                        <strong id="profile-email">alexander.wright@company.org</strong>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
+                    <div class="detail-text">
+                        <span class="detail-label">Location</span>
+                        <strong id="profile-location">San Francisco, CA</strong>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon">
+                        <i class="fa-solid fa-calendar-check"></i>
+                    </div>
+                    <div class="detail-text">
+                        <span class="detail-label">Member Since</span>
+                        <strong id="profile-joined">October 2022</strong>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div class="detail-text">
+                        <span class="detail-label">Account Status</span>
+                        <strong class="text-success">Verified &amp; Active</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Stats Counters -->
+            <div class="stats-row">
+                <div class="stat-box">
+                    <span id="stat-projects" class="stat-value">38</span>
+                    <span class="stat-label">Projects</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-box">
+                    <span id="stat-reviews" class="stat-value">142</span>
+                    <span class="stat-label">Reviews</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-box">
+                    <span id="stat-rating" class="stat-value">4.9</span>
+                    <span class="stat-label">Rating</span>
+                </div>
+            </div>
+
+            <!-- Action Buttons Row -->
+            <div class="card-actions">
+                <button type="button" id="edit-profile-btn" class="btn btn-secondary">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span>Edit Profile</span>
+                </button>
+
+                <button type="button" id="logout-btn" class="btn btn-primary">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    <span>Log Out</span>
+                </button>
+            </div>
+
+            <!-- Footer Meta -->
+            <footer class="profile-card-footer">
+                <p>EduPulse Secure Authentication System · Session ID #<span id="session-id">84920</span></p>
+            </footer>
+
+        </article>
+
+        <!-- Notification Toast (for actions) -->
+        <div id="profile-toast" class="profile-toast hidden" role="status">
+            <i class="fa-solid fa-circle-check"></i>
+            <span id="toast-message">Action completed.</span>
+        </div>
+
+    </main>
+
+    <!-- JavaScript -->
+    <script src="js/profile.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | My Website</title>
+
+    <!-- CSS (Modern Neutral Theme, No Gradients) -->
+    <link rel="stylesheet" href="css/login.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <main class="login-container">
+
+        <form class="login-card" id="login-form" action="#" method="post" novalidate>
+
+            <!-- Logo -->
+            <div class="login-icon">
+                <i class="fa-solid fa-user-shield" aria-hidden="true"></i>
+            </div>
+
+            <!-- Heading -->
+            <h1>Welcome Back</h1>
+            <p class="subtitle">Please enter your details to sign in.</p>
+
+            <!-- Alert / Error Message Container -->
+            <div id="login-alert" class="login-alert hidden" role="alert" aria-live="polite">
+                <i id="alert-icon" class="fa-solid fa-circle-exclamation"></i>
+                <span id="alert-text">Invalid username or password.</span>
+            </div>
+
+            <!-- Username -->
+            <div class="input-group">
+                <label for="username">Username</label>
+
+                <div class="username-input input-box">
+                    <i class="fa-solid fa-user" aria-hidden="true"></i>
+
+                    <input type="text" id="username" name="username" placeholder="Enter your username"
+                        autocomplete="username" required>
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="input-group">
+                <label for="password">Password</label>
+
+                <div class="password-input input-box">
+                    <i class="fa-solid fa-lock" aria-hidden="true"></i>
+
+                    <input type="password" id="password" name="password" placeholder="Enter your password"
+                        autocomplete="current-password" required>
+
+                    <button type="button" id="toggle-password" class="toggle-password-btn" aria-label="Toggle password visibility">
+                        <i class="fa-regular fa-eye" id="eye-icon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Options -->
+            <div class="options">
+
+                <div class="remember-me">
+                    <input type="checkbox" id="remember-me" name="remember-me">
+
+                    <label for="remember-me">Remember me</label>
+                </div>
+
+                <a href="#" id="forgot-password-link">Forgot password?</a>
+
+            </div>
+
+            <!-- Login Button -->
+            <button type="submit" id="login-btn">
+                <span id="btn-text">Login</span>
+                <i class="fa-solid fa-arrow-right" id="btn-icon" aria-hidden="true"></i>
+            </button>
+
+            <!-- Quick Demo Credentials Hint -->
+            <div class="demo-hint-box">
+                <span class="hint-title"><i class="fa-solid fa-key"></i> Demo Accounts:</span>
+                <div class="demo-chips">
+                    <button type="button" class="demo-chip" data-user="admin" data-pass="password123">
+                        <strong>admin</strong> / password123
+                    </button>
+                    <button type="button" class="demo-chip" data-user="jhondoe" data-pass="password123">
+                        <strong>jhondoe</strong> / password123
+                    </button>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <p class="login-footer">
+                Secure login <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+            </p>
+
+        </form>
+
+    </main>
+
+    <!-- JavaScript -->
+    <script src="js/login.js"></script>
+
+</body>
+
+</html>

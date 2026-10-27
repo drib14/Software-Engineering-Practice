@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EduPulse Student Management System - Complete Vanilla JavaScript Capstone demonstrating Fundamentals to DOM manipulation, Async/Await, and Data Persistence.">
+    <title>EduPulse | Student Management System (Vanilla JS Capstone)</title>
+
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Application Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- ================================================================= -->
+    <!-- SIMULATED ASYNC LOADING OVERLAY (MODULE 6)                         -->
+    <!-- ================================================================= -->
+    <div id="loadingOverlay" class="loading-overlay" role="dialog" aria-modal="true" aria-label="Loading Application">
+        <div class="loader-card">
+            <div class="spinner-ring">
+                <div class="spinner-inner"></div>
+                <i class="fa-solid fa-graduation-cap loader-icon"></i>
+            </div>
+            <h2 class="loader-title">EduPulse System</h2>
+            <p id="loaderStatusText" class="loader-status">Initializing database and local storage...</p>
+            <div class="loader-progress-track">
+                <div id="loaderProgressBar" class="loader-progress-fill"></div>
+            </div>
+            <span class="loader-badge"><i class="fa-solid fa-bolt"></i> Async/Await Simulation (Zero API)</span>
+        </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- ASYNC ERROR RECOVERY BANNER (MODULE 6)                            -->
+    <!-- ================================================================= -->
+    <aside id="errorRecoveryBanner" class="error-banner hidden" role="alert" aria-live="assertive">
+        <div class="error-banner-content">
+            <i class="fa-solid fa-triangle-exclamation error-banner-icon"></i>
+            <div class="error-banner-text">
+                <strong id="errorBannerTitle">Simulated Operation Failed</strong>
+                <p id="errorBannerMessage">The simulated asynchronous operation encountered an error.</p>
+            </div>
+        </div>
+        <div class="error-banner-actions">
+            <button id="retryAsyncBtn" class="btn btn-sm btn-danger-outline" type="button">
+                <i class="fa-solid fa-rotate-right"></i> Retry Operation
+            </button>
+            <button id="dismissErrorBannerBtn" class="btn btn-sm btn-ghost" type="button" aria-label="Dismiss banner">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ================================================================= -->
+    <!-- TOAST NOTIFICATION CONTAINER (MODULE 7)                           -->
+    <!-- ================================================================= -->
+    <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- ================================================================= -->
+    <!-- MAIN APPLICATION WRAPPER                                          -->
+    <!-- ================================================================= -->
+    <div class="app-layout">
+        <!-- HEADER / NAVIGATION -->
+        <header class="app-header">
+            <div class="header-container">
+                <div class="brand-group">
+                    <div class="brand-logo">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div class="brand-info">
+                        <h1 class="brand-title">EduPulse <span class="brand-badge">SMS v1.0</span></h1>
+                        <p class="brand-subtitle">Student Management & Academic Analytics System</p>
+                    </div>
+                </div>
+
+                <!-- Global Action Controls -->
+                <div class="header-actions">
+                    <button id="inspectConceptsBtn" class="btn btn-glass" type="button" title="View demonstrated JavaScript concepts">
+                        <i class="fa-solid fa-code"></i>
+                        <span>JS Concepts (12/12)</span>
+                    </button>
+
+                    <button id="simulateErrorToggleBtn" class="btn btn-glass" type="button" title="Toggle simulated network error for async testing">
+                        <i class="fa-solid fa-bug"></i>
+                        <span id="simulateErrorLabel">Simulate Error: OFF</span>
+                    </button>
+
+                    <button id="exportDataBtn" class="btn btn-glass" type="button" title="Export records to JSON file">
+                        <i class="fa-solid fa-file-export"></i>
+                        <span class="desktop-only">Export JSON</span>
+                    </button>
+
+                    <label for="importDataInput" class="btn btn-glass cursor-pointer" title="Import records from JSON file">
+                        <i class="fa-solid fa-file-import"></i>
+                        <span class="desktop-only">Import</span>
+                    </label>
+                    <input type="file" id="importDataInput" accept=".json" class="visually-hidden">
+
+                    <button id="resetDataBtn" class="btn btn-danger-ghost" type="button" title="Reset dataset to initial sample data">
+                        <i class="fa-solid fa-arrow-rotate-left"></i>
+                        <span class="desktop-only">Reset Data</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="app-main">
+            <!-- ============================================================= -->
+            <!-- MODULE 4: DYNAMIC DASHBOARD SUMMARY CARDS                     -->
+            <!-- ============================================================= -->
+            <section class="dashboard-section" aria-labelledby="dashboardHeading">
+                <div class="section-header-compact">
+                    <h2 id="dashboardHeading" class="section-title">
+                        <i class="fa-solid fa-chart-pie"></i> Executive Performance Dashboard
+                    </h2>
+                    <span class="realtime-indicator">
+                        <span class="pulse-dot"></span> Real-time Calculated
+                    </span>
+                </div>
+
+                <div class="stats-grid">
+                    <!-- Total Students Card -->
+                    <article class="stat-card stat-primary">
+                        <div class="stat-header">
+                            <span class="stat-label">Total Enrollment</span>
+                            <div class="stat-icon-wrapper">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                        </div>
+                        <div class="stat-body">
+                            <span id="totalStudentsStat" class="stat-value">0</span>
+                            <span id="totalStudentsSub" class="stat-subtext">Active student records</span>
+                        </div>
+                        <div class="stat-footer">
+                            <span class="stat-pill pill-primary">
+                                <i class="fa-solid fa-database"></i> LocalStorage Synced
+                            </span>
+                        </div>
+                    </article>
+
+                    <!-- Passed Students Card -->
+                    <article class="stat-card stat-success">
+                        <div class="stat-header">
+                            <span class="stat-label">Passing Standing</span>
+                            <div class="stat-icon-wrapper">
+                                <i class="fa-solid fa-user-check"></i>
+                            </div>
+                        </div>
+                        <div class="stat-body">
+                            <span id="passedStudentsStat" class="stat-value">0</span>
+                            <span id="passedStudentsRate" class="stat-subtext">0.0% of class passed</span>
+                        </div>
+                        <div class="stat-footer">
+                            <span class="stat-pill pill-success">
+                                <i class="fa-solid fa-circle-check"></i> Benchmark ≥ 75.0%
+                            </span>
+                        </div>
+                    </article>
+
+                    <!-- Failed Students Card -->
+                    <article class="stat-card stat-danger">
+                        <div class="stat-header">
+                            <span class="stat-label">At-Risk / Failed</span>
+                            <div class="stat-icon-wrapper">
+                                <i class="fa-solid fa-user-xmark"></i>
+                            </div>
+                        </div>
+                        <div class="stat-body">
+                            <span id="failedStudentsStat" class="stat-value">0</span>
+                            <span id="failedStudentsRate" class="stat-subtext">0.0% require intervention</span>
+                        </div>
+                        <div class="stat-footer">
+                            <span class="stat-pill pill-danger">
+                                <i class="fa-solid fa-triangle-exclamation"></i> Remedial Attention
+                            </span>
+                        </div>
+                    </article>
+
+                    <!-- Class Average Grade Card -->
+                    <article class="stat-card stat-warning">
+                        <div class="stat-header">
+                            <span class="stat-label">Class Average GPA</span>
+                            <div class="stat-icon-wrapper">
+                                <i class="fa-solid fa-award"></i>
+                            </div>
+                        </div>
+                        <div class="stat-body">
+                            <span id="classAverageStat" class="stat-value">0.0%</span>
+                            <span id="classAverageRemark" class="stat-subtext">No grades recorded</span>
+                        </div>
+                        <div class="stat-footer">
+                            <div class="mini-progress-bar">
+                                <div id="classAverageBar" class="mini-progress-fill" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Overall Attendance Rate Card -->
+                    <article class="stat-card stat-info">
+                        <div class="stat-header">
+                            <span class="stat-label">Class Attendance</span>
+                            <div class="stat-icon-wrapper">
+                                <i class="fa-solid fa-clipboard-user"></i>
+                            </div>
+                        </div>
+                        <div class="stat-body">
+                            <span id="overallAttendanceStat" class="stat-value">0.0%</span>
+                            <span id="attendanceBreakdownStat" class="stat-subtext">0P / 0L / 0A total sessions</span>
+                        </div>
+                        <div class="stat-footer">
+                            <span class="stat-pill pill-info">
+                                <i class="fa-solid fa-calendar-check"></i> Weighted (Late=0.5)
+                            </span>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Class Honor Roll & Benchmark Highlights Bar -->
+                <div class="benchmark-bar">
+                    <div class="benchmark-item">
+                        <i class="fa-solid fa-crown text-amber"></i>
+                        <span>Top Performer:</span>
+                        <strong id="topPerformerText" class="benchmark-val">None yet</strong>
+                    </div>
+                    <div class="benchmark-divider"></div>
+                    <div class="benchmark-item">
+                        <i class="fa-solid fa-arrow-trend-up text-emerald"></i>
+                        <span>Highest Grade:</span>
+                        <strong id="highestGradeText" class="benchmark-val">N/A</strong>
+                    </div>
+                    <div class="benchmark-divider"></div>
+                    <div class="benchmark-item">
+                        <i class="fa-solid fa-arrow-trend-down text-rose"></i>
+                        <span>Lowest Grade:</span>
+                        <strong id="lowestGradeText" class="benchmark-val">N/A</strong>
+                    </div>
+                    <div class="benchmark-divider"></div>
+                    <div class="benchmark-item">
+                        <i class="fa-solid fa-bullseye text-indigo"></i>
+                        <span>Passing Rule:</span>
+                        <span class="benchmark-val">GPA ≥ 75.0 (Strict Scale)</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================= -->
+            <!-- MODULE 1, 2, 3: STUDENT RECORDS MANAGEMENT                     -->
+            <!-- ============================================================= -->
+            <section class="records-section" aria-labelledby="recordsHeading">
+                <div class="records-header">
+                    <div class="records-title-group">
+                        <h2 id="recordsHeading" class="section-title">
+                            <i class="fa-solid fa-id-card"></i> Student Directory
+                        </h2>
+                        <span id="recordCountBadge" class="count-badge">0 Students</span>
+                    </div>
+
+                    <button id="openAddStudentModalBtn" class="btn btn-primary" type="button">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>Enroll New Student</span>
+                    </button>
+                </div>
+
+                <!-- Filter & Search Toolbar -->
+                <div class="toolbar-card">
+                    <!-- Search Input -->
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input 
+                            type="search" 
+                            id="searchInput" 
+                            class="form-control search-input" 
+                            placeholder="Search by student name or ID (e.g. STU-1001)..." 
+                            autocomplete="off"
+                            aria-label="Search students by name or ID"
+                        >
+                        <button id="clearSearchBtn" class="clear-search-btn hidden" type="button" aria-label="Clear search">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <!-- Filter Controls -->
+                    <div class="filter-controls">
+                        <!-- Course Filter -->
+                        <div class="filter-group">
+                            <label for="courseFilter" class="filter-label">Course</label>
+                            <select id="courseFilter" class="form-select">
+                                <option value="ALL">All Courses</option>
+                                <option value="BS Computer Science">BS Computer Science</option>
+                                <option value="BS Information Technology">BS Information Technology</option>
+                                <option value="BS Data Science">BS Data Science</option>
+                                <option value="BS Software Engineering">BS Software Engineering</option>
+                            </select>
+                        </div>
+
+                        <!-- Year Level Filter -->
+                        <div class="filter-group">
+                            <label for="yearFilter" class="filter-label">Year Level</label>
+                            <select id="yearFilter" class="form-select">
+                                <option value="ALL">All Years</option>
+                                <option value="1st Year">1st Year</option>
+                                <option value="2nd Year">2nd Year</option>
+                                <option value="3rd Year">3rd Year</option>
+                                <option value="4th Year">4th Year</option>
+                            </select>
+                        </div>
+
+                        <!-- Academic Status Filter -->
+                        <div class="filter-group">
+                            <label for="statusFilter" class="filter-label">Status</label>
+                            <select id="statusFilter" class="form-select">
+                                <option value="ALL">All Statuses</option>
+                                <option value="PASSED">Passed (≥ 75%)</option>
+                                <option value="FAILED">Failed (&lt; 75%)</option>
+                                <option value="NO_GRADES">No Grades Yet</option>
+                            </select>
+                        </div>
+
+                        <!-- Sort By Selector -->
+                        <div class="filter-group">
+                            <label for="sortBySelect" class="filter-label">Sort By</label>
+                            <select id="sortBySelect" class="form-select">
+                                <option value="name_asc">Name (A → Z)</option>
+                                <option value="name_desc">Name (Z → A)</option>
+                                <option value="id_asc">Student ID (Asc)</option>
+                                <option value="gpa_desc">GPA (Highest First)</option>
+                                <option value="gpa_asc">GPA (Lowest First)</option>
+                                <option value="attendance_desc">Attendance % (High → Low)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Student Records Table Container -->
+                <div class="table-container">
+                    <table class="student-table" id="studentsTable" aria-describedby="recordsHeading">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="th-id">Student ID</th>
+                                <th scope="col" class="th-student">Student Details</th>
+                                <th scope="col" class="th-course">Program & Year</th>
+                                <th scope="col" class="th-grades">Grades & GPA</th>
+                                <th scope="col" class="th-attendance">Attendance</th>
+                                <th scope="col" class="th-actions text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTableBody">
+                            <!-- Populated dynamically via Vanilla JS DOM manipulation -->
+                        </tbody>
+                    </table>
+
+                    <!-- Empty State Placeholder (Module 7) -->
+                    <div id="emptyState" class="empty-state hidden">
+                        <div class="empty-state-icon">
+                            <i class="fa-solid fa-folder-open"></i>
+                        </div>
+                        <h3 id="emptyStateTitle" class="empty-state-title">No Students Found</h3>
+                        <p id="emptyStateMsg" class="empty-state-desc">No records match your search or filter criteria. Try adjusting the query or reset your filters.</p>
+                        <div class="empty-state-actions">
+                            <button id="resetFiltersBtn" class="btn btn-secondary" type="button">
+                                <i class="fa-solid fa-filter-circle-xmark"></i> Reset Filters
+                            </button>
+                            <button id="emptyStateAddBtn" class="btn btn-primary" type="button">
+                                <i class="fa-solid fa-plus"></i> Add Student
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="app-footer">
+            <div class="footer-container">
+                <p>EduPulse Student Management System · Vanilla JavaScript Capstone (Zero-to-Hero)</p>
+                <p class="footer-sub">Built with pure HTML, modern CSS, and vanilla JS DOM &amp; Promises. Strict zero-API architecture.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- MODAL 1: ADD / EDIT STUDENT MODAL (MODULE 1)                      -->
+    <!-- ================================================================= -->
+    <div id="studentModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="studentModalTitle">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title-group">
+                        <i id="studentModalIcon" class="fa-solid fa-user-plus modal-title-icon"></i>
+                        <h3 id="studentModalTitle" class="modal-title">Enroll New Student</h3>
+                    </div>
+                    <button id="closeStudentModalBtn" class="btn-close" type="button" aria-label="Close modal">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <form id="studentForm" novalidate>
+                    <div class="modal-body">
+                        <!-- Mode flag to distinguish Add vs Edit -->
+                        <input type="hidden" id="studentFormMode" value="add">
+                        <input type="hidden" id="originalStudentId" value="">
+
+                        <!-- Student ID -->
+                        <div class="form-row">
+                            <div class="form-field">
+                                <div class="field-label-group">
+                                    <label for="studentIdInput" class="form-label required">Student ID</label>
+                                    <button type="button" id="generateIdBtn" class="btn-link-action">
+                                        <i class="fa-solid fa-wand-magic-sparkles"></i> Auto-Generate
+                                    </button>
+                                </div>
+                                <div class="input-icon-wrapper">
+                                    <i class="fa-solid fa-hashtag input-icon"></i>
+                                    <input 
+                                        type="text" 
+                                        id="studentIdInput" 
+                                        class="form-control" 
+                                        placeholder="e.g. STU-1007" 
+                                        required 
+                                        maxlength="15"
+                                    >
+                                </div>
+                                <span id="studentIdError" class="field-error" aria-live="polite"></span>
+                            </div>
+
+                            <!-- Age -->
+                            <div class="form-field">
+                                <label for="studentAgeInput" class="form-label required">Age (15 – 99)</label>
+                                <div class="input-icon-wrapper">
+                                    <i class="fa-solid fa-cake-candles input-icon"></i>
+                                    <input 
+                                        type="number" 
+                                        id="studentAgeInput" 
+                                        class="form-control" 
+                                        placeholder="e.g. 20" 
+                                        min="15" 
+                                        max="99" 
+                                        required
+                                    >
+                                </div>
+                                <span id="studentAgeError" class="field-error" aria-live="polite"></span>
+                            </div>
+                        </div>
+
+                        <!-- Full Name -->
+                        <div class="form-field">
+                            <label for="studentNameInput" class="form-label required">Full Name</label>
+                            <div class="input-icon-wrapper">
+                                <i class="fa-solid fa-user input-icon"></i>
+                                <input 
+                                    type="text" 
+                                    id="studentNameInput" 
+                                    class="form-control" 
+                                    placeholder="e.g. Evelyn Reed" 
+                                    minlength="3" 
+                                    maxlength="60" 
+                                    required
+                                >
+                            </div>
+                            <span id="studentNameError" class="field-error" aria-live="polite"></span>
+                        </div>
+
+                        <!-- Course & Year Level -->
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="studentCourseInput" class="form-label required">Degree Program</label>
+                                <select id="studentCourseInput" class="form-select" required>
+                                    <option value="" disabled selected>Select course...</option>
+                                    <option value="BS Computer Science">BS Computer Science</option>
+                                    <option value="BS Information Technology">BS Information Technology</option>
+                                    <option value="BS Data Science">BS Data Science</option>
+                                    <option value="BS Software Engineering">BS Software Engineering</option>
+                                </select>
+                                <span id="studentCourseError" class="field-error" aria-live="polite"></span>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="studentYearInput" class="form-label required">Year Level</label>
+                                <select id="studentYearInput" class="form-select" required>
+                                    <option value="" disabled selected>Select year...</option>
+                                    <option value="1st Year">1st Year</option>
+                                    <option value="2nd Year">2nd Year</option>
+                                    <option value="3rd Year">3rd Year</option>
+                                    <option value="4th Year">4th Year</option>
+                                </select>
+                                <span id="studentYearError" class="field-error" aria-live="polite"></span>
+                            </div>
+                        </div>
+
+                        <!-- Initial Grades (Optional on create) -->
+                        <div id="initialGradesField" class="form-field">
+                            <label for="studentInitialGradesInput" class="form-label">
+                                Initial Grades <span class="label-optional">(Optional, comma-separated 0–100)</span>
+                            </label>
+                            <div class="input-icon-wrapper">
+                                <i class="fa-solid fa-calculator input-icon"></i>
+                                <input 
+                                    type="text" 
+                                    id="studentInitialGradesInput" 
+                                    class="form-control" 
+                                    placeholder="e.g. 88, 92, 79, 85"
+                                >
+                            </div>
+                            <span id="studentInitialGradesError" class="field-error" aria-live="polite"></span>
+                            <span class="field-hint">You can add, edit, and remove individual grades anytime after enrollment.</span>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button id="cancelStudentModalBtn" class="btn btn-secondary" type="button">Cancel</button>
+                        <button id="saveStudentBtn" class="btn btn-primary" type="submit">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                            <span id="saveStudentBtnText">Save Record</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- MODAL 2: GRADE MANAGEMENT MODAL (MODULE 2)                        -->
+    <!-- ================================================================= -->
+    <div id="gradeModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="gradeModalTitle">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title-group">
+                        <i class="fa-solid fa-calculator modal-title-icon text-indigo"></i>
+                        <div>
+                            <h3 id="gradeModalTitle" class="modal-title">Grade Management</h3>
+                            <p id="gradeModalSubtitle" class="modal-subtitle">Managing grades for student</p>
+                        </div>
+                    </div>
+                    <button id="closeGradeModalBtn" class="btn-close" type="button" aria-label="Close modal">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" id="gradeStudentId">
+
+                    <!-- Live Grade Summary Bar -->
+                    <div class="grade-summary-card">
+                        <div class="grade-stat-box">
+                            <span class="grade-stat-label">Calculated GPA</span>
+                            <strong id="modalGpaValue" class="grade-stat-value">0.0%</strong>
+                        </div>
+                        <div class="grade-stat-box">
+                            <span class="grade-stat-label">Academic Standing</span>
+                            <span id="modalStandingBadge" class="status-badge badge-neutral">No Grades</span>
+                        </div>
+                        <div class="grade-stat-box">
+                            <span class="grade-stat-label">High / Low Score</span>
+                            <span id="modalHighLowScore" class="grade-stat-text">-- / --</span>
+                        </div>
+                    </div>
+
+                    <!-- Add New Grade Form -->
+                    <form id="addGradeForm" class="add-grade-form" novalidate>
+                        <div class="form-field add-grade-input-group">
+                            <label for="newGradeInput" class="form-label required">Assign New Grade (0 – 100)</label>
+                            <div class="input-with-button">
+                                <div class="input-icon-wrapper flex-grow">
+                                    <i class="fa-solid fa-percent input-icon"></i>
+                                    <input 
+                                        type="number" 
+                                        id="newGradeInput" 
+                                        class="form-control" 
+                                        placeholder="Enter score (0–100)" 
+                                        min="0" 
+                                        max="100" 
+                                        step="0.1" 
+                                        required
+                                    >
+                                </div>
+                                <button id="submitNewGradeBtn" class="btn btn-primary" type="submit">
+                                    <i class="fa-solid fa-plus"></i> Add Grade
+                                </button>
+                            </div>
+                            <span id="newGradeError" class="field-error" aria-live="polite"></span>
+                        </div>
+                    </form>
+
+                    <!-- Existing Grades List -->
+                    <div class="existing-grades-section">
+                        <div class="existing-grades-header">
+                            <h4 class="subheading">Recorded Assessments</h4>
+                            <span id="gradesCountLabel" class="text-muted">0 entries</span>
+                        </div>
+                        <div id="gradesChipsContainer" class="grades-chips-grid">
+                            <!-- Populated dynamically via DOM -->
+                        </div>
+                        <p id="noGradesNotice" class="text-muted text-center py-2 hidden">No grades recorded yet for this student.</p>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="doneGradeModalBtn" class="btn btn-primary" type="button">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- MODAL 3: ATTENDANCE MANAGEMENT MODAL (MODULE 3)                   -->
+    <!-- ================================================================= -->
+    <div id="attendanceModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="attendanceModalTitle">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title-group">
+                        <i class="fa-solid fa-clipboard-user modal-title-icon text-cyan"></i>
+                        <div>
+                            <h3 id="attendanceModalTitle" class="modal-title">Attendance Tracking</h3>
+                            <p id="attendanceModalSubtitle" class="modal-subtitle">Update session records</p>
+                        </div>
+                    </div>
+                    <button id="closeAttendanceModalBtn" class="btn-close" type="button" aria-label="Close modal">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" id="attendanceStudentId">
+
+                    <!-- Attendance Rate Indicator Card -->
+                    <div class="attendance-rate-card">
+                        <div class="attendance-rate-info">
+                            <span class="rate-label">Attendance Rating</span>
+                            <span id="modalAttendanceRate" class="rate-value">0.0%</span>
+                            <span id="modalAttendanceRemark" class="rate-sub">Calculated via (Present + 0.5×Late) / Total</span>
+                        </div>
+                        <div class="attendance-progress-ring">
+                            <div class="progress-ring-track">
+                                <div id="modalAttendanceProgressRing" class="progress-ring-fill" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Counter Controls -->
+                    <div class="attendance-controls-grid">
+                        <!-- Present -->
+                        <div class="attendance-counter-card border-success">
+                            <div class="counter-label text-success">
+                                <i class="fa-solid fa-circle-check"></i> Present (1.0 pt)
+                            </div>
+                            <div class="counter-actions">
+                                <button type="button" id="decPresentBtn" class="btn-counter" aria-label="Decrease present count">-</button>
+                                <span id="modalPresentCount" class="counter-display">0</span>
+                                <button type="button" id="incPresentBtn" class="btn-counter" aria-label="Increase present count">+</button>
+                            </div>
+                        </div>
+
+                        <!-- Late -->
+                        <div class="attendance-counter-card border-warning">
+                            <div class="counter-label text-amber">
+                                <i class="fa-solid fa-clock"></i> Late (0.5 pt)
+                            </div>
+                            <div class="counter-actions">
+                                <button type="button" id="decLateBtn" class="btn-counter" aria-label="Decrease late count">-</button>
+                                <span id="modalLateCount" class="counter-display">0</span>
+                                <button type="button" id="incLateBtn" class="btn-counter" aria-label="Increase late count">+</button>
+                            </div>
+                        </div>
+
+                        <!-- Absent -->
+                        <div class="attendance-counter-card border-danger">
+                            <div class="counter-label text-rose">
+                                <i class="fa-solid fa-circle-xmark"></i> Absent (0.0 pt)
+                            </div>
+                            <div class="counter-actions">
+                                <button type="button" id="decAbsentBtn" class="btn-counter" aria-label="Decrease absent count">-</button>
+                                <span id="modalAbsentCount" class="counter-display">0</span>
+                                <button type="button" id="incAbsentBtn" class="btn-counter" aria-label="Increase absent count">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="total-sessions-summary">
+                        <span>Total Academic Sessions:</span>
+                        <strong id="modalTotalSessions">0</strong>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="resetStudentAttendanceBtn" class="btn btn-secondary" type="button">
+                        <i class="fa-solid fa-rotate-left"></i> Reset to Zero
+                    </button>
+                    <button id="doneAttendanceModalBtn" class="btn btn-primary" type="button">Save &amp; Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- MODAL 4: CONFIRMATION DIALOG (MODULE 7 - DELETE / RESET)          -->
+    <!-- ================================================================= -->
+    <div id="confirmModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+        <div class="modal-dialog modal-dialog-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title-group">
+                        <i id="confirmModalIcon" class="fa-solid fa-triangle-exclamation text-rose modal-title-icon"></i>
+                        <h3 id="confirmModalTitle" class="modal-title">Confirm Action</h3>
+                    </div>
+                    <button id="closeConfirmModalBtn" class="btn-close" type="button" aria-label="Close modal">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <p id="confirmModalMessage" class="confirm-message">Are you sure you want to proceed with this action?</p>
+                    <div id="confirmModalSubtext" class="confirm-subtext">This action cannot be undone.</div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="cancelConfirmModalBtn" class="btn btn-secondary" type="button">Cancel</button>
+                    <button id="executeConfirmModalBtn" class="btn btn-danger" type="button">
+                        <i class="fa-solid fa-trash-can"></i> Confirm &amp; Proceed
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- MODAL 5: JAVASCRIPT CONCEPTS INSPECTOR MODAL                      -->
+    <!-- ================================================================= -->
+    <div id="conceptsModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="conceptsModalTitle">
+        <div class="modal-dialog modal-dialog-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title-group">
+                        <i class="fa-solid fa-graduation-cap modal-title-icon text-indigo"></i>
+                        <div>
+                            <h3 id="conceptsModalTitle" class="modal-title">JavaScript Mastery Inspector</h3>
+                            <p class="modal-subtitle">12/12 Core Concepts Implemented &amp; Verified in Code</p>
+                        </div>
+                    </div>
+                    <button id="closeConceptsModalBtn" class="btn-close" type="button" aria-label="Close modal">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="modal-body concepts-modal-body">
+                    <div class="concepts-grid" id="conceptsGrid">
+                        <!-- Populated dynamically from JavaScript inspection registry -->
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="closeConceptsFooterBtn" class="btn btn-primary" type="button">Close Inspector</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- APPLICATION LOGIC SCRIPT (STRICT VANILLA JAVASCRIPT)              -->
+    <!-- ================================================================= -->
+    <script src="js/app.js"></script>
+</body>
+</html>
